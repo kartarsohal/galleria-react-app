@@ -35,7 +35,8 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
-.search-input:focus {
+.search-input:focus,
+.btn:focus {
   outline: none;
 }
 
@@ -46,6 +47,24 @@ body {
   color: #fff;
   font-family: "Poppins", sans-serif;
   cursor: pointer;
+  z-index: 0;
+  position: relative;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  z-index: -1;
+  background: #222121;
+  transition: all 0.3s ease;
+}
+
+.btn:hover::after {
+  width: 100%;
 }
 
 .main-wrapper {
