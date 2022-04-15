@@ -27,18 +27,30 @@ export default function Card() {
     setImg("");
   };
 
+  const enterKeyHandler = (e) => {
+    if (e.key === "Enter") {
+      fetchData();
+      setImg("");
+    }
+  };
+
   return (
     <>
       <Header
         searchValue={img}
         onChangeValue={(e) => setImg(e.target.value)}
         submit={Submit}
+        enterSubmit={enterKeyHandler}
       ></Header>
       <div className="main-wrapper">
         {data.map((val) => {
           return (
-            <figure key={val.id} className='image-wrapper'>
-              <img src={val.urls.small} alt={val.alt_description} className='image'/>
+            <figure key={val.id} className="image-wrapper">
+              <img
+                src={val.urls.small}
+                alt={val.alt_description}
+                className="image"
+              />
               <h3 className="image-description">{val.alt_description}</h3>
             </figure>
           );

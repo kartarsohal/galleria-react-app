@@ -13,6 +13,7 @@ export default function Header(props) {
           className="search-input"
           value={props.searchValue}
           onChange={props.onChangeValue}
+          onKeyDown={props.enterSubmit}
         />
         <button type="submit" onClick={props.submit} className="btn">
           Search
