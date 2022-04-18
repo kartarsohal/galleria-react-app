@@ -1,44 +1,65 @@
-import Header from "../layouts/header/Header";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+
+import Header from "../layouts/header/Header";
+import Pagination from "./Pagination";
 
 export default function Card() {
   const [data, setData] = useState([]);
   const [img, setImg] = useState("");
+  const [pageNum, setPageNum] = useState(1);
+  const [pagination, setPagination] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
 
-  async function fetchData() {
+  async function fetchData(pageNum) {
     try {
       const response = await axios.get(
-        `https://api.unsplash.com/search/photos?page=1&query=${img}&client_id=${process.env.REACT_APP_ACCESS_KEY}&per_page=40`
+        `https://api.unsplash.com/search/photos?page=${pageNum}&query=${img}&client_id=${process.env.REACT_APP_ACCESS_KEY}&per_page=30`
       );
+
       const mainData = response.data.results;
+
+      setTotalPages(response.data.total_pages);
       setData(mainData);
     } catch (error) {
       console.error(error);
     }
   }
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const Submit = () => {
-    fetchData();
-    setImg("");
+    fetchData(pageNum);
+    setPagination(true);
   };
 
   const enterKeyHandler = (e) => {
     if (e.key === "Enter") {
-      fetchData();
-      setImg("");
+      fetchData(pageNum);
+      setPagination(true);
     }
+  };
+
+  useEffect(() => {
+    fetchData(pageNum);
+  }, []);
+
+  const mainNextPageClickHandler = () => {
+    setPageNum(pageNum + 1);
+    fetchData(pageNum + 1);
+  };
+
+  const mainPrevPageClickHandler = () => {
+    setPageNum(pageNum - 1);
+    fetchData(pageNum - 1);
   };
 
   return (
     <>
       <Header
         searchValue={img}
-        onChangeValue={(e) => setImg(e.target.value)}
+        onChangeValue={(e) => {
+          setPageNum(1);
+          setImg(e.target.value);
+        }}
         submit={Submit}
         enterSubmit={enterKeyHandler}
       ></Header>
@@ -56,6 +77,14 @@ export default function Card() {
           );
         })}
       </div>
+      {pagination ? (
+        <Pagination
+          page={pageNum}
+          totalNumOfPages={totalPages}
+          nextPageClickHandler={mainNextPageClickHandler}
+          prevPageClickHandler={mainPrevPageClickHandler}
+        />
+      ) : null}
     </>
   );
 }
