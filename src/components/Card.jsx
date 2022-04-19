@@ -4,6 +4,8 @@ import axios from "axios";
 import Header from "../layouts/header/Header";
 import Pagination from "./Pagination";
 
+import downloadIcon from "../assets/images/download.png";
+
 export default function Card() {
   const [data, setData] = useState([]);
   const [img, setImg] = useState("");
@@ -45,11 +47,13 @@ export default function Card() {
   const mainNextPageClickHandler = () => {
     setPageNum(pageNum + 1);
     fetchData(pageNum + 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const mainPrevPageClickHandler = () => {
     setPageNum(pageNum - 1);
     fetchData(pageNum - 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -73,6 +77,24 @@ export default function Card() {
                 className="image"
               />
               <h3 className="image-description">{val.alt_description}</h3>
+              <figure
+                className="download-link"
+                onClick={() => {
+                  var a = document.createElement("a");
+                  a.href = val.urls.small;
+                  a.download = val.id;
+                  a.target = "_blank";
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                }}
+              >
+                <img
+                  src={downloadIcon}
+                  alt="Download Icon"
+                  className="download-icon"
+                />
+              </figure>
             </figure>
           );
         })}
