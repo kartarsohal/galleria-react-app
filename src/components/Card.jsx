@@ -56,6 +56,19 @@ export default function Card() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+    async function downloadImage(imageSrc, imageName) {
+      const image = await fetch(imageSrc)
+      const imageBlog = await image.blob()
+      const imageURL = URL.createObjectURL(imageBlog)
+    
+      const link = document.createElement('a')
+      link.href = imageURL
+      link.download = imageName
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+
   return (
     <>
       <Header
@@ -80,13 +93,9 @@ export default function Card() {
               <figure
                 className="download-link"
                 onClick={() => {
-                  var a = document.createElement("a");
-                  a.href = val.urls.small;
-                  a.download = val.id;
-                  a.target = "_blank";
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
+                  const splitImageName = val.alt_description.split(' ');
+                  const joinedImageName = splitImageName.join('-');
+                  downloadImage(val.urls.small, joinedImageName)
                 }}
               >
                 <img
